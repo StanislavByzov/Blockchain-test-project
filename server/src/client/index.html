@@ -1,0 +1,100 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Meta Properties -->
+    <meta charset="UTF-8">
+    <title>SlarChain.io</title>
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0, user-scalable=no">
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/main.css" />
+    <!-- Audio -->
+    <audio id="split_cell" src="audio/split.mp3"></audio>
+    <audio id="spawn_cell" src="audio/spawn.mp3"></audio>
+</head>
+
+<body>
+    <div id="gameAreaWrapper">
+        <div id="status"><span class="title">Leaderboard</span></div>
+        <div class="chatbox" id="chatbox">
+            <ul id="chatList" class="chat-list"></ul>
+            <input id="chatInput" type="text" class="chat-input" placeholder="Chat here..." maxlength="35" />
+        </div>
+        <div id="mobile">
+            <input type="image" id="split" class="split" src="img/split.png" alt="splitBtn">
+            <input type="image" id="feed" class="feed" src="img/feed.png" alt="feedBtn">
+        </div>
+        <canvas tabindex="1" id="cvs"></canvas>
+    </div>
+    <div id="startMenuWrapper" class="wrapper">
+        <div id="startMenu" class="content">
+
+            <div class="header-logo">
+                <logo>
+                    <input type="image" src="img/logo1.png" style="cursor:auto" alt="feedBtn">
+                </logo>
+                <input type="text" tabindex="0" autofocus placeholder="Enter your name here" id="playerNameInput"
+                    maxlength="25" />
+                <b class="input-error">Nick must be alphanumeric characters only!</b>
+                <br />
+                <p>Current balance:</p>
+            </div>
+            <div id="instructions" class="menu-buttons instructions-menu" style="display: none;">
+                <h2>Gameplay</h2>
+                <div class="list-content">
+                    <p>1. Move your mouse on the screen to move your character.</p>
+                    <p>2. Eat food and other players in order to grow your character<br>
+                        (food respawns every time a player eats it).</p>
+                    <p>3. A player's mass is the number of food particles eaten.</p>
+                    <p>4. Try to get fat and eat other players.</p>
+                </div>
+            </div>
+
+            <div id="ratings" class="menu-buttons ratings-menu" style="display: none;">
+                <h2>World Ratings</h2>
+                <div class="list-content">
+                    <p>Not implemented yet...</p>
+                </div>
+            </div>
+            <div id="settings" class="menu-buttons settings-menu" style="display: none;">
+                <h2>Settings</h2>
+                <div class="list-content">
+                    <p><input id="visBord" type="checkbox">Show border</p>
+                    <p><input id="showMass" type="checkbox">Show mass</p>
+                    <p><input id="continuity" type="checkbox">Continue moving when mouse is off-screen</p>
+                    <p><input id="roundFood" type="checkbox" checked>Rounded food</p>
+                    <p><input id="darkMode" type="checkbox">Toggle Dark Mode</p>
+                </div>
+            </div>
+            <div id="team" class="menu-buttons team-menu" style="display: none;">
+                <h2>Our Team</h2>
+                <div class="list-content">
+                    <p>Stanislau Buzau</p>
+                    <p>Aleh Slesarenka</p>
+                    <p>Alena Pazniak</p>
+                </div>
+            </div>
+            <div id="menu-buttons" class="menu-buttons">
+                <button id="startButton" style="display: none">Play!</button></a>
+                <button id="loginButton">Login</button>
+                <button id="spectateButton">Spectate</button>
+            </div>
+        </div>
+        <div class="nav">
+
+        </div>
+        <div class="nav-links">
+            <a class="nav-link" id="instructionsButton">Rules</a>
+            <a class="nav-link" id="ratingsButton">World Rating</a>
+            <a class="nav-link" id="settingsButton">Settings</a>
+            <a class="nav-link" id="teamButton">Our Team</a>
+        </div>
+    </div>
+    </div>
+    <!-- JS -->
+    <script src="//code.jquery.com/jquery-2.2.0.min.js"></script>
+    <script src="js/app.js"></script>
+</body>
+
+</html>
