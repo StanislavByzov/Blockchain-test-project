@@ -2,6 +2,8 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import Web3 from 'web3';
 import * as $ from 'jquery';
 import Game from '../../build/contracts/Game.json';
+import SafeMath from '../../build/contracts/SafeMath.json';
+import Escrow from '../../build/contracts/Escrow.json';
 
 @Component({
     selector: 'app-root',
@@ -56,13 +58,15 @@ export class AppComponent implements OnInit {
     async initWeb3() {
         this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
         const game = new this.web3.eth.Contract(Game.abi, '0x7799eEffcf21A00732Cf7B5FA246de75d8AA9fbb');
+        const safeMath = new this.web3.eth.Contract(SafeMath.abi, '0x7183CDDE3Ebd29B363E13F63750407763F76e164');
         const accounts = await window['ethereum'].enable();
 
         this.web3.eth.defaultAccount = accounts[0];
         const result = {
             contracts:
             {
-                Game: game
+                Game: game,
+                SafeMath: safeMath
             },
             web3: this.web3
         };
@@ -75,8 +79,13 @@ export class AppComponent implements OnInit {
     }
 
     login(playerName: string) {
-        // this.contracts["Game"].methods.login(playerName).send({ from: this.web3.eth.defaultAccount, value: 20 }).then((res) => {
-        this.contracts["Game"].methods.login(playerName).send({ from: this.web3.eth.defaultAccount }).then((res) => {
+        const contractAddress = '0x7799eEffcf21A00732Cf7B5FA246de75d8AA9fbb';
+        this.contracts["Game"].methods.setAddress(contractAddress).send().then((res) => {
+            console.log(res);
+        }).catch(function (err) {
+            console.error(err);
+        });
+        this.contracts["Game"].methods.login(playerName).send({ from: this.web3.eth.defaultAccount, value: 20000 }).then((res) => {
             console.log(res);
         }).catch(function (err) {
             console.error(err);
@@ -92,8 +101,18 @@ export class AppComponent implements OnInit {
                 value: ""
             };
             this.sendIn(message);
+            this.checkDeposit();
+        });
 
-        })
+    }
+
+    checkDeposit() {
+        const account = this.web3.eth.defaultAccount;
+        this.contracts["Game"].methods.depositsOf(account).send().then((res) => {
+            console.log(res);
+        }).catch(function (err) {
+            console.error(err);
+        });
 
     }
 
