@@ -31,7 +31,7 @@
         <!-- <div id="loader">
           <p class="text-center">Loading...</p>
         </div> -->
-        <div id="content">
+        <!-- <div id="content">
           <table class="table">
             <thead>
               <tr>
@@ -44,32 +44,19 @@
             </tbody>
           </table>
           <hr />
-          <div *ngIf="!hasVoted" class="form-group">
-            <label for="candidatesSelect">Select Candidate</label>
-            <select class="form-control" id="candidatesSelect">
-            </select>
-            <button (click)="this.castVote();" class="btn btn-primary">Vote</button>
-          </div>
+          <div *ngIf="!hasVoted" class="form-group"> 
+          <label for="candidatesSelect">Select Candidate</label>
+          <select class="form-control" id="candidatesSelect">
+          </select>
+          <button (click)="this.castVote();" class="btn btn-primary">Vote</button>
+          </div> 
           <div *ngIf="hasVoted" class="form-group">
             <label>Sorry, you have already voted</label>
           </div>
           <p id="accountAddress" class="text-center"></p>
-        </div>
-        <div id="battlefield" style="width: 100%; height: 50%;">
-
-          <svg viewBox='-512 -512 1024 1024'>
-            <defs>
-              <polygon id='star' points='250,0 64,64 0,250 -64,64 -250,0 -64,-64 0,-250 64,-64'
-                transform="scale(0.2)" />
-            </defs>
-
-            <g id="player" style="position: absolute">
-              <use xlink:href='#star' />
-              <use xlink:href='#star' />
-              <use xlink:href='#star' />
-            </g>
-          </svg>
-
+        </div> -->
+        <div style="width: 800px; height: 600px;">
+          <iframe id="game-iframe" src="http://127.0.0.1:3000" style="width: 800px; height: 600px;"></iframe>
         </div>
 
       </div>
