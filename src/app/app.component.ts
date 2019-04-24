@@ -25,15 +25,17 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-
+        window.addEventListener('resize', () => {
+            this.resize();
+        });
         const result = this.initWeb3();
         window.addEventListener('message', (event) => {
 
             if (~event.origin.indexOf('http://127.0.0.1')) {
                 const message = event.data;
-                console.log(message);
-                if (message == 'Login') {
-                    this.login();
+                if (message.message == 'Login') {
+                    console.log(message);
+                    this.login(message.value);
                 }
             } else {
 
@@ -43,7 +45,7 @@ export class AppComponent implements OnInit {
         result.then((response) => {
             console.log(response);
             this.contracts = response.contracts;
-            this.listenForEvents();
+            this.getAccount();
             setTimeout(() => {
                 this.sendIn("Iframe message");
             }, 2000);
@@ -52,9 +54,8 @@ export class AppComponent implements OnInit {
     };
 
     async initWeb3() {
-        console.log(window);
         this.web3 = new Web3(Web3.givenProvider || 'ws://localhost:8545');
-        const game = new this.web3.eth.Contract(Game.abi, '0x8a351bf2049a1883A3D782e840c621cc17Dbc35f');
+        const game = new this.web3.eth.Contract(Game.abi, '0x7799eEffcf21A00732Cf7B5FA246de75d8AA9fbb');
         const accounts = await window['ethereum'].enable();
 
         this.web3.eth.defaultAccount = accounts[0];
@@ -68,71 +69,16 @@ export class AppComponent implements OnInit {
         return result;
     }
 
-    // Listen for events emitted from the contract
-    listenForEvents() {
-        console.log(this.contracts["Game"]);
-        console.log(this.contracts["Game"].events);
-        this.render();
-        // this.contracts["Game"].methods.vote(2).send().then((res) => {
-        //     console.log(res);
-        // });
-    }
-
-    render() {
-
-        // Load account data
-        console.log(this.web3.eth.getAccounts()); // пробую здесь получить аккаунт - падает
-
+    getAccount() {
         this.account = this.web3.eth.defaultAccount;
         console.log(this.account);
-        $("#accountAddress").html("Your Account: " + this.account);
-
-        // Load contract data
-        // this.contracts["Game"].methods.candidatesCount().call().then((candidatesCount) => {
-        //     const candidatesNumber = Number(candidatesCount);
-        //     console.log(+candidatesNumber);
-        //     var candidatesResults = $("#candidatesResults");
-        //     candidatesResults.empty();
-
-        //     var candidatesSelect = $('#candidatesSelect');
-        //     candidatesSelect.empty();
-        //     console.log(candidatesSelect);
-        //     for (var i = 1; i <= candidatesNumber; i++) {
-        //         this.contracts["Game"].methods.candidates(i).call().then((candidate) => {
-        //             console.log(candidate);
-        //             var id = candidate[0];
-        //             var name = candidate[1];
-        //             var voteCount = candidate[2];
-
-        //             // Render candidate Result
-        //             var candidateTemplate = "<tr><th>" + id + "</th><td>" + name + "</td><td>" + voteCount + "</td></tr>"
-        //             candidatesResults.append(candidateTemplate);
-
-        //             // Render candidate ballot option
-        //             var candidateOption = "<option value='" + id + "' >" + name + "</ option>"
-        //             candidatesSelect.append(candidateOption);
-        //         });
-        //     }
-        //     console.log(this.account);
-        //     return this.contracts["Game"].methods.voters(this.account).call();
-        // }).then((hasVoted) => {
-        //     this.hasVoted = hasVoted;
-        //     console.log(this.hasVoted);
-        //     this.cdr.detectChanges();
-        //     // Do not allow a user to vote
-        //     // if (hasVoted) {
-        //     //     $('form').hide();
-        //     // }
-        //     // loader.hide();
-        //     // content.show();
-        // }).catch(function (error) {
-        //     console.warn(error);
-        // });
     }
 
-    login() {
-        const playerName = 'Stas';
-        this.contracts["Game"].methods.login(playerName).send().catch(function (err) {
+    login(playerName: string) {
+        // this.contracts["Game"].methods.login(playerName).send({ from: this.web3.eth.defaultAccount, value: 20 }).then((res) => {
+        this.contracts["Game"].methods.login(playerName).send({ from: this.web3.eth.defaultAccount }).then((res) => {
+            console.log(res);
+        }).catch(function (err) {
             console.error(err);
         });
 
@@ -143,7 +89,7 @@ export class AppComponent implements OnInit {
             console.log('Logged IN!');
             const message = {
                 message: "Login OK",
-                value: "document.getElementById('spawn_cell').play();"
+                value: ""
             };
             this.sendIn(message);
 
@@ -157,6 +103,19 @@ export class AppComponent implements OnInit {
         frame["contentWindow"].postMessage(messageObject, '*');
     }
 
+    resize() {
 
+        let message = {
+            message: "Resize H",
+            value: window.innerHeight - 5 + 'px'
+        };
+        this.sendIn(message);
+        message = {
+            message: "Resize W",
+            value: window.innerWidth + 'px'
+        };
+        this.sendIn(message);
+        document.getElementById("game-iframe").style.height = window.innerHeight - 5 + 'px';
+    }
 }
 
